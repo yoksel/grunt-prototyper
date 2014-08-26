@@ -37,12 +37,34 @@ module.exports = function(grunt) {
 
         });
 
-        console.log("-----*-------");
-        console.log(templatesComponents);
-        console.log("------------");
+        // console.log("-----*-------");
+        // console.log(templatesComponents);
+        // console.log("------------");
 
-        var componentsSources = grunt.file.expand(components + "*");
-        var elementsList = {};
+        var finalModules = templatesComponents.modules;
+        var finalData = {
+            "templates": []
+        };
+
+        if (finalModules) {
+            for (var item in finalModules) {
+                console.log("-----" + item + "------");
+                console.log(finalModules[item]);
+                finalData.templates.push({
+                    "name": item,
+                    "content": finalModules[item]
+                });
+            }
+        }
+
+        var indexTemplate = grunt.file.read(templates + "index.html");
+
+        var result = mustache.render(indexTemplate, finalData);
+
+        console.log(result);
+
+        grunt.file.write("index.html", result);
+
 
         function parseFolder(folderPath) {
             var folderName = path.basename(folderPath);
@@ -59,15 +81,20 @@ module.exports = function(grunt) {
                 var itemJson = {};
 
                 if (grunt.file.exists(jsonPath)) {
+                    // console.log(" \n - - JSON exist  - - ");
                     itemJson = grunt.file.readJSON(jsonPath);
-                } else if (srcFolderName === "blocks") {
+                } else if (folderName === "blocks") {
                     itemJson = templatesComponents["elements"];
-                } else if (srcFolderName === "modules") {
+                    // console.log(" \n - - itemJson for BLOCKS - - ");
+                    // console.log(itemJson);
+                } else if (folderName === "modules") {
+                    // console.log("\n - - itemJson for MODULES - - ");
+                    // console.log(itemJson);
                     itemJson = templatesComponents["blocks"];
                 }
 
-                console.log(" - - itemJson - - ");
-                console.log(itemJson);
+                // console.log(" - - itemJson - - ");
+                // console.log(itemJson);
                 // console.log(itemTemplate);
 
                 if (itemJson) {
@@ -77,9 +104,9 @@ module.exports = function(grunt) {
 
             });
 
-            console.log("folderData");
-            console.log(folderData);
-            console.log("------------");
+            // console.log("folderData");
+            // console.log(folderData);
+            // console.log("------------");
 
             return folderData;
         }
