@@ -1,0 +1,44 @@
+{
+  "name": "grunt-prototyper",
+  "description": "Create elements from components",
+  "version": "0.0.1",
+  "homepage": "https://github.com/yoksel/grunt-prototyper",
+  "author": {
+    "name": "yoksel",
+    "email": "yoksel@yandex.ru"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yoksel/grunt-prototyper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoksel/grunt-prototyper/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/yoksel/grunt-prototyper/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt": "~0.4.5"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.5"
+  },
+  "keywords": [
+    "gruntplugin"
+  ],
+  "dependencies": {
+    "mustache": "~0.8.2"
+  }
+}
