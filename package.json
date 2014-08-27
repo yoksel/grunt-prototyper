@@ -39,6 +39,8 @@
     "gruntplugin"
   ],
   "dependencies": {
-    "mustache": "~0.8.2"
+    "grunt-open": "^0.2.3",
+    "mustache": "~0.8.2",
+    "open": "0.0.5"
   }
 }

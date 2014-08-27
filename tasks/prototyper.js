@@ -9,17 +9,20 @@
 'use strict';
 
 var mustache = require("mustache"),
-    path = require("path");
+    path = require("path"),
+    open = require("open");
 
 module.exports = function(grunt) {
 
     grunt.registerMultiTask('prototyper', 'Create elements from components', function() {
         // Merge task-specific and/or target-specific options with these defaults.
-        var components = this.data.components,
-            templates = this.data.templates,
-            elementsPath = components + "elements/",
-            blocksPath = components + "blocks/",
-            modulePath = components + "modules/";
+        var cwd = this.data.cwd,
+            componentsFolder = this.data.componentsFolder,
+            templates = cwd + this.data.templatesFolder,
+            elementsPath = cwd + componentsFolder + "elements/",
+            blocksPath = cwd + componentsFolder + "blocks/",
+            modulePath = cwd + componentsFolder + "modules/",
+            resultFile = cwd + "index.html";
 
         var folderPaths = [elementsPath, blocksPath, modulePath];
 
@@ -27,19 +30,9 @@ module.exports = function(grunt) {
 
         folderPaths.forEach(function(folderPath) {
             var folderName = path.basename(folderPath);
-            // console.log("folderPath: " + folderName);
-
             var subFolders = grunt.file.expand(folderPath + "*");
-
-            // subFolders.forEach(function(subFolderPath) {
             templatesComponents[folderName] = parseFolder(folderPath);
-            // });
-
         });
-
-        // console.log("-----*-------");
-        // console.log(templatesComponents);
-        // console.log("------------");
 
         var finalModules = templatesComponents.modules;
         var finalData = {
@@ -48,8 +41,6 @@ module.exports = function(grunt) {
 
         if (finalModules) {
             for (var item in finalModules) {
-                console.log("-----" + item + "------");
-                console.log(finalModules[item]);
                 finalData.templates.push({
                     "name": item,
                     "content": finalModules[item]
@@ -61,10 +52,12 @@ module.exports = function(grunt) {
 
         var result = mustache.render(indexTemplate, finalData);
 
-        console.log(result);
+        grunt.file.write(resultFile, result);
+        open(resultFile);
 
-        grunt.file.write("index.html", result);
 
+        // FUNCTIONS
+        // ----------------------------------------------
 
         function parseFolder(folderPath) {
             var folderName = path.basename(folderPath);
@@ -81,21 +74,12 @@ module.exports = function(grunt) {
                 var itemJson = {};
 
                 if (grunt.file.exists(jsonPath)) {
-                    // console.log(" \n - - JSON exist  - - ");
                     itemJson = grunt.file.readJSON(jsonPath);
                 } else if (folderName === "blocks") {
                     itemJson = templatesComponents["elements"];
-                    // console.log(" \n - - itemJson for BLOCKS - - ");
-                    // console.log(itemJson);
                 } else if (folderName === "modules") {
-                    // console.log("\n - - itemJson for MODULES - - ");
-                    // console.log(itemJson);
                     itemJson = templatesComponents["blocks"];
                 }
-
-                // console.log(" - - itemJson - - ");
-                // console.log(itemJson);
-                // console.log(itemTemplate);
 
                 if (itemJson) {
                     var output = mustache.render(itemTemplate, itemJson);
@@ -104,22 +88,8 @@ module.exports = function(grunt) {
 
             });
 
-            // console.log("folderData");
-            // console.log(folderData);
-            // console.log("------------");
-
             return folderData;
         }
-
-        // console.log(elementsSources);
-
-
-
-        // console.log(elementsList);
-
-
-        console.log("------------");
-
 
     });
 

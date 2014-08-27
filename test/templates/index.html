@@ -2,13 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Modules</title>
+    <style>
+        BODY {
+            background: #FFF;
+            }
+        .wrapper {
+            min-width: 500px;
+            max-width: 1000px;
+            margin: 3em auto;
+            }
+        .module {
+            margin-bottom: 2em;
+         }
+        .module__title {
+            margin: 0 0 .5em;
+            font: 2em/1 Trebuchet MS, sans-serif;
+            }
+        .module__content {
+            border: 2px solid #DDD;
+            }
+    </style>
 </head>
 <body>
-    {{test}}
-    {{#templates}}
-        <h4>{{name}}</h4>
-        {{{content}}}
-    {{/templates}}
+    <div class="wrapper">
+        {{#templates}}
+            <div class="module">
+                <h2 class="module__title">{{name}}</h2>
+                <div class="module__content">
+                    {{{content}}}
+                </div>
+            </div>
+        {{/templates}}
+    </div>
 </body>
 </html>
