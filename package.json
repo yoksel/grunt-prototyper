@@ -1,7 +1,7 @@
 {
   "name": "grunt-prototyper",
   "description": "Create elements from components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/yoksel/grunt-prototyper",
   "author": {
     "name": "yoksel",
@@ -39,7 +39,6 @@
     "gruntplugin"
   ],
   "dependencies": {
-    "grunt-open": "^0.2.3",
     "mustache": "~0.8.2",
     "open": "0.0.5"
   }
