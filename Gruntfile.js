@@ -31,7 +31,8 @@ module.exports = function(grunt) {
                 options: {},
                 cwd: "test/",
                 componentsFolder: "components/",
-                templatesFolder: "templates/"
+                templatesFolder: "templates/",
+                config: "config.json"
             }
         },
 

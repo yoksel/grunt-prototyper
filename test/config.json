@@ -1,0 +1,5 @@
+{
+    "var1": ["user", "title", "comments"],
+    "var2": ["date", "text"],
+    "var3": ["title", "comments"]
+}
