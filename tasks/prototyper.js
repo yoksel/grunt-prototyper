@@ -103,6 +103,10 @@ module.exports = function(grunt) {
         //     "elements": prototyper.parsedResults.elements,
         // };
 
+        function createModification(){
+
+
+        }
 
         var newElements = {
                     "comments": "123",
