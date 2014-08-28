@@ -10,7 +10,8 @@
 
 var mustache = require("mustache"),
     path = require("path"),
-    open = require("open");
+    open = require("open"),
+    prototyper = require("./lib/prototyper.js");
 
 module.exports = function(grunt) {
 
@@ -23,6 +24,7 @@ module.exports = function(grunt) {
             config = {},
             parsedTemplates = {},
             parsedData = {},
+            parsedResult = {},
             elementsPath = cwd + componentsFolder + "elements/",
             blocksPath = cwd + componentsFolder + "blocks/",
             modulePath = cwd + componentsFolder + "modules/",
@@ -36,37 +38,103 @@ module.exports = function(grunt) {
             config = grunt.file.readJSON(configFile);
         }
 
-        console.log(" - - config - -");
-        console.log(config);
+        // console.log(" - - config - -");
+        // console.log(config);
 
         var folderPaths = [elementsPath, blocksPath, modulePath];
 
         var templatesComponents = {};
 
-        // PARSE FOLDERS
+        // prototyper.test();
+
+        // 1. PARSE FOLDERS FIRST
         // ------------------------------------------
-        folderPaths.forEach(function(folderPath) {
-            var folderName = path.basename(folderPath);
-            var subFolders = grunt.file.expand(folderPath + "*");
-            templatesComponents[folderName] = parseFolder(folderPath);
-        });
+        // fill parsedData and parsedTemplates
+
+        prototyper.parseFolders(folderPaths);
+
+        console.log(" \n\n- - prototyper.parsedData - - ");
+        console.log(prototyper.parsedData);
+
+        console.log(" \n\n- - prototyper.parsedTemplates - - ");
+        console.log(prototyper.parsedTemplates);
+        // console.log(prototyper.parsedTemplates);
+
+
+        // parsedTemplates =
+
+        // 2. FILL PARSED RESULTS (only element at first)
+        // ------------------------------------------
+        prototyper.fillTemplatesWithData(prototyper.parsedTemplates, prototyper.parsedData);
+
+
+        // console.log(" \n\n- - prototyper.parsedResult - - ");
+        // console.log(prototyper.parsedResult);
+
+        // NOW elements are ready for using
+
+        var blocksTemplates = prototyper.parsedTemplates["blocks"];
+        // console.log("\n\n - - blocksTemplates - - ");
+        // console.log(blocksTemplates);
+        for (var templateKey in blocksTemplates){
+            var template = blocksTemplates[templateKey];
+            var data = prototyper.parsedResult["elements"];
+            var renderedContent = mustache.render(template, data);
+
+            // console.log("\n\n** templateKey: " + templateKey);
+            // console.log(renderedContent);
+            if(!prototyper.parsedResult["blocks"]){
+                prototyper.parsedResult["blocks"] = {};
+            }
+            prototyper.parsedResult["blocks"][templateKey] = renderedContent;
+        }
+
+        var modulesTemplates = prototyper.parsedTemplates["modules"];
+        // console.log("\n\n - - modulesTemplates - - ");
+        // console.log(modulesTemplates);
+        for (var templateKey in modulesTemplates){
+            var template = modulesTemplates[templateKey];
+            var data = prototyper.parsedResult["blocks"];
+            var renderedContent = mustache.render(template, data);
+
+            console.log("\n\n** templateKey: " + templateKey);
+            console.log(renderedContent);
+            prototyper.parsedResult["modules"] = renderedContent;
+        }
+
+
+
+
+
+
+
+
+
+        // fill parsedTemplates, parsedData, parsedResult
 
         // console.log("- - templatesComponents - - ");
         // console.log(templatesComponents);
 
-        console.log(" - - parsedTemplates - - ");
-        console.log(parsedTemplates);
+        // console.log("\n - - parsedTemplates - - ");
+        // console.log(parsedTemplates);
+
+        // console.log("\n - - parsedData - - ");
+        // console.log(parsedData);
+
+
+
+
 
 
         // PAINT ADDITIONAL TEMPLATES
         // ------------------------------------------
 
         for (var configItem in config) {
-            console.log(" - CONFIGITEM - ");
-            console.log(configItem);
+            // console.log(" - CONFIGITEM - ");
+            // console.log(configItem);
             var requestedElemsList = config[configItem];
             var existedElementsList = parsedData["elements"];
-            var remappedElements = remapObject(existedElementsList, requestedElemsList);
+            // var remappedElements = remapObject(existedElementsList, requestedElemsList);
 
             // console.log("\n - - remappedElements - - ");
             // console.log(remappedElements);
@@ -80,15 +148,15 @@ module.exports = function(grunt) {
                 "modules": parsedData.modules
             };
 
-            var renderedTemplate = parseDataByTemplates(parsedTemplates, newDataSet);
+            // var renderedTemplate = parseDataByTemplates(parsedTemplates, newDataSet);
 
-            console.log(" \n- - NEW renderedTemplate - - ");
-            console.log(renderedTemplate);
+            // console.log(" \n- - NEW renderedTemplate - - ");
+            // console.log(renderedTemplate);
 
-            finalData.templates.push({
-                "name": configItem,
-                "content": renderedTemplate
-            });
+            // finalData.templates.push({
+            //     "name": configItem,
+            //     "content": renderedTemplate
+            // });
         }
 
         // var renderedTemplate = parseDataByTemplates(parsedTemplates, parsedData);
@@ -121,56 +189,49 @@ module.exports = function(grunt) {
         // FUNCTIONS
         // ----------------------------------------------
 
-        function remapObject(inputObject, map) {
+        /**
+        * Fill parsedResult
+        */
+
+
+        //************************************ TRASHCAN
+
+        /**
+        * Fill parsedResult
+        */
+
+        function fillTemplatesWithData(templatesSet, dataSet){
+            for(var dataGroupKey in dataSet){
+                var dataGroup = dataSet[dataGroupKey];
+                var templatesGroup = templatesSet[dataGroupKey];
+
+                for (var dataItemKey in dataGroup){
+                    var dataItem = dataGroup[dataItemKey];
+                    var templateItem = templatesGroup[dataItemKey];
+
+                    if (!dataItem.toString()){
+                        continue;
+                    }
+                    var parsedContent = mustache.render(templateItem, dataItem);
+
+                    if (!parsedResult[dataGroupKey]){
+                        parsedResult[dataGroupKey] = {};
+                    }
+                    parsedResult[dataGroupKey][dataItemKey] = parsedContent;
+                }
+            }
+        }
+
+                function remapObject(inputObject, map) {
             var newObj = {};
 
             map.forEach(function(itemKey) {
                 newObj[itemKey] = inputObject[itemKey];
             });
 
-            console.log("\n\n - - newObj - - -");
-            console.log(newObj);
+            // console.log("\n\n - - newObj - - -");
+            // console.log(newObj);
             return newObj;
-        }
-
-        function parseFolder(folderPath) {
-            var folderName = path.basename(folderPath);
-            var sources = grunt.file.expand(folderPath + "*");
-
-            var folderData = {};
-
-            sources.forEach(function(sourceFolderPath) {
-                var srcFolderName = path.basename(sourceFolderPath);
-
-                var itemTemplate = grunt.file.read(sourceFolderPath + "/template.html");
-                if (!parsedTemplates[folderName]) {
-                    parsedTemplates[folderName] = {};
-                    parsedData[folderName] = {};
-                }
-
-                var jsonPath = sourceFolderPath + "/data.json";
-
-                var itemJson = {};
-
-                if (grunt.file.exists(jsonPath)) {
-                    itemJson = grunt.file.readJSON(jsonPath);
-                } else if (folderName === "blocks") {
-                    itemJson = templatesComponents["elements"];
-                } else if (folderName === "modules") {
-                    itemJson = templatesComponents["blocks"];
-                }
-
-                parsedTemplates[folderName][srcFolderName] = itemTemplate;
-                parsedData[folderName][srcFolderName] = itemJson;
-
-                if (itemJson) {
-                    var output = mustache.render(itemTemplate, itemJson);
-                    folderData[srcFolderName] = output;
-                }
-
-            });
-
-            return folderData;
         }
 
         function parseDataByTemplates(templatesSet, dataSet) {
