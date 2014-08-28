@@ -28,10 +28,13 @@ module.exports = function(grunt) {
 
         prototyper: {
             default_options: {
-                options: {},
+                options: {
+                    openResult: true
+                },
                 cwd: "test/",
                 componentsFolder: "components/",
                 templatesFolder: "templates/",
+                includesFolder: "includes/",
                 config: "config.json"
             }
         },

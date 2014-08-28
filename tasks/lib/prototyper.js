@@ -4,7 +4,7 @@ var path = require("path"),
     grunt = require("grunt"),
     mustache = require("mustache");
 
-prototyper.test = function () {
+prototyper.test = function() {
     console.log("test works");
 };
 
@@ -13,7 +13,7 @@ prototyper.parsedData = {};
 prototyper.parsedResults = {};
 
 
-prototyper.parseFolders = function(folderPaths){
+prototyper.parseFolders = function(folderPaths) {
 
     folderPaths.forEach(function(folderPath) {
         var folderName = path.basename(folderPath);
@@ -23,10 +23,10 @@ prototyper.parseFolders = function(folderPaths){
 };
 
 /**
-* Get folder by path, parse it and fill objects by data and templates
-* Fill parsedTemplates and parsedData
-
-*/
+ * Get folder by path, parse it and fill objects by data and templates
+ * Fill parsedTemplates and parsedData
+ 
+ */
 prototyper.parseFolder = function(folderPath) {
     var parsedTemplates = this.parsedTemplates;
     var parsedData = this.parsedData;
@@ -53,7 +53,7 @@ prototyper.parseFolder = function(folderPath) {
         }
         parsedTemplates[folderName][srcFolderName] = itemTemplate;
         parsedData[folderName][srcFolderName] = itemJson;
-        parsedData[folderName][srcFolderName].toString = function(){
+        parsedData[folderName][srcFolderName].toString = function() {
             var jsonString = JSON.stringify(itemJson);
             return jsonString === "{}" ? "" : jsonString;
         };
@@ -63,24 +63,24 @@ prototyper.parseFolder = function(folderPath) {
 };
 
 /**
-* Fill parsedResult by folders [elements, blocks, modules]
-*/
-prototyper.fillTemplatesWithData = function(templatesSet, dataSet){
+ * Fill parsedResult by folders [elements, blocks, modules]
+ */
+prototyper.fillTemplatesWithData = function(templatesSet, dataSet) {
 
-    for(var dataGroupKey in dataSet){
+    for (var dataGroupKey in dataSet) {
         var dataGroup = dataSet[dataGroupKey];
         var templatesGroup = templatesSet[dataGroupKey];
 
-        for (var dataItemKey in dataGroup){
+        for (var dataItemKey in dataGroup) {
             var dataItem = dataGroup[dataItemKey];
             var templateItem = templatesGroup[dataItemKey];
 
-            if (!dataItem.toString()){
+            if (!dataItem.toString()) {
                 continue;
             }
             var parsedContent = mustache.render(templateItem, dataItem);
 
-            if (!prototyper.parsedResults[dataGroupKey]){
+            if (!prototyper.parsedResults[dataGroupKey]) {
                 prototyper.parsedResults[dataGroupKey] = {};
             }
             prototyper.parsedResults[dataGroupKey][dataItemKey] = parsedContent;
@@ -89,37 +89,75 @@ prototyper.fillTemplatesWithData = function(templatesSet, dataSet){
 };
 
 /**
-* Fill parsedResult for particular folder
-* and place it to parsedResult
-* @params params.templatesKey
-* @params params.parsResultKey
-*/
+ * Fill parsedResult for particular folder
+ * and place it to parsedResult
+ * @params params.templatesKey
+ * @params params.parsResultKey
+ */
 
-prototyper.fillTemplatesByKey = function(params){
+prototyper.fillTemplatesByKey = function(params) {
     var templatesKey = params.templatesKey,
         parsResultKey = params.parsResultKey,
         myParsedResults = params.myParsedResults,
         modification = params.modification;
 
-        var resultsObj = myParsedResults ? myParsedResults : prototyper.parsedResults;
-        var blocksTemplates = prototyper.parsedTemplates[templatesKey];
+    var resultsObj = myParsedResults ? myParsedResults : prototyper.parsedResults;
+    var blocksTemplates = prototyper.parsedTemplates[templatesKey];
 
-        for (var templateKey in blocksTemplates){
+    for (var templateKey in blocksTemplates) {
 
-            var template = blocksTemplates[templateKey];
-            var data = resultsObj[parsResultKey];
-            var renderedContent = mustache.render(template, data);
+        var template = blocksTemplates[templateKey];
+        var data = resultsObj[parsResultKey];
+        var renderedContent = mustache.render(template, data);
 
-            if (renderedContent){
-                if(!prototyper.parsedResults[templatesKey]){
-                    prototyper.parsedResults[templatesKey] = {};
-                }
-                if (modification){
-                    templateKey = templateKey + modification;
-                }
-                prototyper.parsedResults[templatesKey][templateKey] = renderedContent;
+        if (renderedContent) {
+            if (!prototyper.parsedResults[templatesKey]) {
+                prototyper.parsedResults[templatesKey] = {};
             }
-         }
+            if (modification) {
+                templateKey = templateKey + modification;
+            }
+            prototyper.parsedResults[templatesKey][templateKey] = renderedContent;
+        }
+    }
+};
+
+prototyper.remapObject = function(oldElements, modifList) {
+    var newElements = {};
+
+    console.log("\n\n- - modifList - - \n");
+    console.log(modifList);
+
+    modifList.forEach(function(modifKey) {
+        newElements[modifKey] = oldElements[modifKey];
+    });
+
+    console.log(newElements);
+
+    return newElements;
+};
+
+prototyper.createModification = function(modifKey, modifList) {
+
+    var oldElements = prototyper.parsedResults["elements"];
+    var newElements = prototyper.remapObject(oldElements, modifList);
+
+    var paramsBlocks2 = {
+        "templatesKey": "blocks",
+        "parsResultKey": "elements",
+        "myParsedResults": {
+            "elements": newElements
+        }
+    };
+    prototyper.fillTemplatesByKey(paramsBlocks2);
+
+    var paramsModules2 = {
+        "templatesKey": "modules",
+        "parsResultKey": "blocks",
+        "modification": "_" + modifKey
+    };
+    prototyper.fillTemplatesByKey(paramsModules2);
+
 };
 
 module.exports = prototyper;
