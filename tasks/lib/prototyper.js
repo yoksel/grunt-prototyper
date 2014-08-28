@@ -11,6 +11,7 @@ prototyper.test = function() {
 prototyper.parsedTemplates = {};
 prototyper.parsedData = {};
 prototyper.parsedResults = {};
+prototyper.componentsLists = {};
 
 
 prototyper.parseFolders = function(folderPaths) {
@@ -99,7 +100,8 @@ prototyper.fillTemplatesByKey = function(params) {
     var templatesKey = params.templatesKey,
         parsResultKey = params.parsResultKey,
         myParsedResults = params.myParsedResults,
-        modification = params.modification;
+        modifKey = params.modifKey,
+        modifList = params.modifList;
 
     var resultsObj = myParsedResults ? myParsedResults : prototyper.parsedResults;
     var blocksTemplates = prototyper.parsedTemplates[templatesKey];
@@ -114,25 +116,29 @@ prototyper.fillTemplatesByKey = function(params) {
             if (!prototyper.parsedResults[templatesKey]) {
                 prototyper.parsedResults[templatesKey] = {};
             }
-            if (modification) {
-                templateKey = templateKey + modification;
+            if (modifKey) {
+                templateKey = templateKey + "--" + modifKey;
+                prototyper.componentsLists[templateKey] = modfListToList(modifList);
             }
             prototyper.parsedResults[templatesKey][templateKey] = renderedContent;
         }
     }
 };
 
+function modfListToList(modifList) {
+    var output = "";
+    modifList.forEach(function(item) {
+        output += "<li>" + item + "</li>";
+    });
+    return "<ul>" + output + "</ul>";
+}
+
 prototyper.remapObject = function(oldElements, modifList) {
     var newElements = {};
-
-    console.log("\n\n- - modifList - - \n");
-    console.log(modifList);
 
     modifList.forEach(function(modifKey) {
         newElements[modifKey] = oldElements[modifKey];
     });
-
-    console.log(newElements);
 
     return newElements;
 };
@@ -154,10 +160,10 @@ prototyper.createModification = function(modifKey, modifList) {
     var paramsModules2 = {
         "templatesKey": "modules",
         "parsResultKey": "blocks",
-        "modification": "_" + modifKey
+        "modifKey": modifKey,
+        "modifList": modifList
     };
     prototyper.fillTemplatesByKey(paramsModules2);
-
 };
 
 module.exports = prototyper;

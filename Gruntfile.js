@@ -29,7 +29,7 @@ module.exports = function(grunt) {
         prototyper: {
             default_options: {
                 options: {
-                    openResult: true
+                    // openResult: false
                 },
                 cwd: "test/",
                 componentsFolder: "components/",

@@ -18,8 +18,8 @@ module.exports = function(grunt) {
     grunt.registerMultiTask('prototyper', 'Create elements from components', function() {
 
         var cwd = this.data.cwd,
-            options = this.options,
-            openResult = options.openResult ? options.openResult : true,
+            options = this.options(),
+            openResult = options.openResult,
             componentsFolder = this.data.componentsFolder,
             templatesFolder = cwd + this.data.templatesFolder,
             includesFolder = cwd + this.data.includesFolder,
@@ -56,7 +56,6 @@ module.exports = function(grunt) {
 
         prototyper.fillTemplatesWithData(prototyper.parsedTemplates, prototyper.parsedData);
 
-
         // 3. Parse all set from elements to modules
         // ------------------------------------------
         // get full module
@@ -80,8 +79,8 @@ module.exports = function(grunt) {
         for (var modifKey in config) {
             var modifItem = config[modifKey];
             prototyper.createModification(modifKey, modifItem);
+            prototyper.componentsLists[modifKey] = modifItem;
         }
-
 
         // 5. Paint result
         // ------------------------------------------
@@ -92,9 +91,19 @@ module.exports = function(grunt) {
             for (var item in finalModules) {
                 finalData.templates.push({
                     "name": item,
-                    "content": finalModules[item]
+                    "content": finalModules[item],
+                    "components": prototyper.componentsLists[item]
                 });
             }
+        }
+
+        if (grunt.file.exists(includesFolder)) {
+            var includes = grunt.file.expand(includesFolder + "*");
+            includes.forEach(function(filePath) {
+                var includedContent = grunt.file.read(filePath);
+                var fileName = path.basename(filePath, path.extname(filePath));
+                finalData[fileName] = includedContent;
+            });
         }
 
         var indexTemplate = grunt.file.read(templatesFolder + "index.html");
@@ -102,21 +111,11 @@ module.exports = function(grunt) {
         var result = mustache.render(indexTemplate, finalData);
 
         grunt.file.write(resultFile, result);
-        open(resultFile);
 
-
-        // FUNCTIONS
-        // ----------------------------------------------
-
-        /**
-         * Fill parsedResults
-         */
-
-
-        //************************************ TRASHCAN
-
-
-
+        openResult = (openResult === undefined) ? true : openResult;
+        if (openResult) {
+            open(resultFile);
+        }
 
     });
 
