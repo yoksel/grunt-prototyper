@@ -10,25 +10,15 @@ prototyper.test = function () {
 
 prototyper.parsedTemplates = {};
 prototyper.parsedData = {};
-prototyper.parsedResult = {};
+prototyper.parsedResults = {};
 
 
 prototyper.parseFolders = function(folderPaths){
 
     folderPaths.forEach(function(folderPath) {
         var folderName = path.basename(folderPath);
-
-        // console.log("folderName: " + folderName);
-
         prototyper.parseFolder(folderPath);
-
-
-        // parseFolder(folderPath);
-        // templatesComponents[folderName] = parseFolder(folderPath);
     });
-
-    // console.log(" \n\n\n\ - - this.parsedTemplates - - ");
-    // console.log(this.parsedTemplates);
 
 };
 
@@ -38,15 +28,11 @@ prototyper.parseFolders = function(folderPaths){
 
 */
 prototyper.parseFolder = function(folderPath) {
-     var parsedTemplates = this.parsedTemplates;
+    var parsedTemplates = this.parsedTemplates;
     var parsedData = this.parsedData;
 
     var folderName = path.basename(folderPath);
     var sources = grunt.file.expand(folderPath + "*");
-
-    // console.log("prototyper.parseFolder IN WORK");
-
-    // console.log(sources);
 
     sources.forEach(function(sourceFolderPath) {
         var srcFolderName = path.basename(sourceFolderPath);
@@ -72,15 +58,12 @@ prototyper.parseFolder = function(folderPath) {
             return jsonString === "{}" ? "" : jsonString;
         };
 
-        // console.log(parsedTemplates);
-
     });
 
 };
 
-
 /**
-* Fill parsedResult
+* Fill parsedResult by folders [elements, blocks, modules]
 */
 prototyper.fillTemplatesWithData = function(templatesSet, dataSet){
 
@@ -97,12 +80,46 @@ prototyper.fillTemplatesWithData = function(templatesSet, dataSet){
             }
             var parsedContent = mustache.render(templateItem, dataItem);
 
-            if (!prototyper.parsedResult[dataGroupKey]){
-                prototyper.parsedResult[dataGroupKey] = {};
+            if (!prototyper.parsedResults[dataGroupKey]){
+                prototyper.parsedResults[dataGroupKey] = {};
             }
-            prototyper.parsedResult[dataGroupKey][dataItemKey] = parsedContent;
+            prototyper.parsedResults[dataGroupKey][dataItemKey] = parsedContent;
         }
     }
+};
+
+/**
+* Fill parsedResult for particular folder
+* and place it to parsedResult
+* @params params.templatesKey
+* @params params.parsResultKey
+*/
+
+prototyper.fillTemplatesByKey = function(params){
+    var templatesKey = params.templatesKey,
+        parsResultKey = params.parsResultKey,
+        myParsedResults = params.myParsedResults,
+        modification = params.modification;
+
+        var resultsObj = myParsedResults ? myParsedResults : prototyper.parsedResults;
+        var blocksTemplates = prototyper.parsedTemplates[templatesKey];
+
+        for (var templateKey in blocksTemplates){
+
+            var template = blocksTemplates[templateKey];
+            var data = resultsObj[parsResultKey];
+            var renderedContent = mustache.render(template, data);
+
+            if (renderedContent){
+                if(!prototyper.parsedResults[templatesKey]){
+                    prototyper.parsedResults[templatesKey] = {};
+                }
+                if (modification){
+                    templateKey = templateKey + modification;
+                }
+                prototyper.parsedResults[templatesKey][templateKey] = renderedContent;
+            }
+         }
 };
 
 module.exports = prototyper;

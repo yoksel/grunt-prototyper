@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             config = {},
             parsedTemplates = {},
             parsedData = {},
-            parsedResult = {},
+            parsedResults = {},
             elementsPath = cwd + componentsFolder + "elements/",
             blocksPath = cwd + componentsFolder + "blocks/",
             modulePath = cwd + componentsFolder + "modules/",
@@ -38,14 +38,8 @@ module.exports = function(grunt) {
             config = grunt.file.readJSON(configFile);
         }
 
-        // console.log(" - - config - -");
-        // console.log(config);
-
         var folderPaths = [elementsPath, blocksPath, modulePath];
 
-        var templatesComponents = {};
-
-        // prototyper.test();
 
         // 1. PARSE FOLDERS FIRST
         // ------------------------------------------
@@ -53,64 +47,40 @@ module.exports = function(grunt) {
 
         prototyper.parseFolders(folderPaths);
 
-        console.log(" \n\n- - prototyper.parsedData - - ");
-        console.log(prototyper.parsedData);
-
-        console.log(" \n\n- - prototyper.parsedTemplates - - ");
-        console.log(prototyper.parsedTemplates);
+        // console.log(" \n\n- - prototyper.parsedData - - ");
+        // console.log(prototyper.parsedData);
+        // console.log(" \n\n- - prototyper.parsedTemplates - - ");
         // console.log(prototyper.parsedTemplates);
-
-
-        // parsedTemplates =
 
         // 2. FILL PARSED RESULTS (only element at first)
         // ------------------------------------------
         prototyper.fillTemplatesWithData(prototyper.parsedTemplates, prototyper.parsedData);
 
 
-        // console.log(" \n\n- - prototyper.parsedResult - - ");
-        // console.log(prototyper.parsedResult);
-
-        // NOW elements are ready for using
-
-        var blocksTemplates = prototyper.parsedTemplates["blocks"];
-        // console.log("\n\n - - blocksTemplates - - ");
-        // console.log(blocksTemplates);
-        for (var templateKey in blocksTemplates){
-            var template = blocksTemplates[templateKey];
-            var data = prototyper.parsedResult["elements"];
-            var renderedContent = mustache.render(template, data);
-
-            // console.log("\n\n** templateKey: " + templateKey);
-            // console.log(renderedContent);
-            if(!prototyper.parsedResult["blocks"]){
-                prototyper.parsedResult["blocks"] = {};
-            }
-            prototyper.parsedResult["blocks"][templateKey] = renderedContent;
-        }
-
-        var modulesTemplates = prototyper.parsedTemplates["modules"];
-        // console.log("\n\n - - modulesTemplates - - ");
-        // console.log(modulesTemplates);
-        for (var templateKey in modulesTemplates){
-            var template = modulesTemplates[templateKey];
-            var data = prototyper.parsedResult["blocks"];
-            var renderedContent = mustache.render(template, data);
-
-            console.log("\n\n** templateKey: " + templateKey);
-            console.log(renderedContent);
-            prototyper.parsedResult["modules"] = renderedContent;
-        }
+        // console.log(" \n\n- - prototyper.parsedResults - - ");
+        // console.log(prototyper.parsedResults);
 
 
 
+        // 3. Parse all set from elements to modules
+        // ------------------------------------------
+        var paramsBlocks = {
+            "templatesKey": "blocks",
+            "parsResultKey": "elements"
+        };
+        prototyper.fillTemplatesByKey(paramsBlocks);
 
+        console.log(" \n\n- - prototyper.parsedResults BLOCKS - - ");
+        console.log(prototyper.parsedResults.blocks);
 
+        var paramsModules = {
+            "templatesKey": "modules",
+            "parsResultKey": "blocks"
+        };
+        prototyper.fillTemplatesByKey(paramsModules);
 
-
-
-
-        // fill parsedTemplates, parsedData, parsedResult
+        // console.log(" \n\n- - prototyper.parsedResults - - ");
+        // console.log(prototyper.parsedResults.modules);
 
         // console.log("- - templatesComponents - - ");
         // console.log(templatesComponents);
@@ -122,51 +92,46 @@ module.exports = function(grunt) {
         // console.log(parsedData);
 
 
-
-
-
-
         // PAINT ADDITIONAL TEMPLATES
         // ------------------------------------------
 
-        for (var configItem in config) {
-            // console.log(" - CONFIGITEM - ");
-            // console.log(configItem);
-            var requestedElemsList = config[configItem];
-            var existedElementsList = parsedData["elements"];
-            // var remappedElements = remapObject(existedElementsList, requestedElemsList);
 
-            // console.log("\n - - remappedElements - - ");
-            // console.log(remappedElements);
+        // 4. Try to remap
+        // ------------------------------------------
 
-            var newDataSet = {
-                "elements": {
+        // var newPropset = {
+        //     "elements": prototyper.parsedResults.elements,
+        // };
+
+
+        var newElements = {
                     "comments": "123",
                     "title": "2342342"
-                },
-                "blocks": parsedData.blocks,
-                "modules": parsedData.modules
             };
 
-            // var renderedTemplate = parseDataByTemplates(parsedTemplates, newDataSet);
+        var paramsBlocks2 = {
+            "templatesKey": "blocks",
+            "parsResultKey": "elements",
+            "myParsedResults": {
+                "elements": newElements
+            }
+        };
+        prototyper.fillTemplatesByKey(paramsBlocks2);
 
-            // console.log(" \n- - NEW renderedTemplate - - ");
-            // console.log(renderedTemplate);
+        var paramsModules2 = {
+            "templatesKey": "modules",
+            "parsResultKey": "blocks",
+            "modification": "_newName"
+        };
+        prototyper.fillTemplatesByKey(paramsModules2);
 
-            // finalData.templates.push({
-            //     "name": configItem,
-            //     "content": renderedTemplate
-            // });
-        }
+        console.log(" \n\n- - prototyper.parsedResults (modules) - - ");
+        console.log(prototyper.parsedResults.modules);
 
-        // var renderedTemplate = parseDataByTemplates(parsedTemplates, parsedData);
-
-        // console.log(" \n- - renderedTemplate - - ");
-        // console.log(renderedTemplate);
         // PAINT RESULT
         // ------------------------------------------
 
-        var finalModules = templatesComponents.modules;
+        var finalModules = prototyper.parsedResults.modules;
 
 
         if (finalModules) {
@@ -190,14 +155,14 @@ module.exports = function(grunt) {
         // ----------------------------------------------
 
         /**
-        * Fill parsedResult
+        * Fill parsedResults
         */
 
 
         //************************************ TRASHCAN
 
         /**
-        * Fill parsedResult
+        * Fill parsedResults
         */
 
         function fillTemplatesWithData(templatesSet, dataSet){
@@ -214,10 +179,10 @@ module.exports = function(grunt) {
                     }
                     var parsedContent = mustache.render(templateItem, dataItem);
 
-                    if (!parsedResult[dataGroupKey]){
-                        parsedResult[dataGroupKey] = {};
+                    if (!parsedResults[dataGroupKey]){
+                        parsedResults[dataGroupKey] = {};
                     }
-                    parsedResult[dataGroupKey][dataItemKey] = parsedContent;
+                    parsedResults[dataGroupKey][dataItemKey] = parsedContent;
                 }
             }
         }
