@@ -14,23 +14,47 @@
             }
         .module {
             margin-bottom: 2em;
-         }
+            }
         .module__title {
             margin: 0 0 .5em;
             font: 2em/1 Trebuchet MS, sans-serif;
             }
-        .module__content {
-            border: 2px solid #DDD;
+        .module__wrapper {
             }
+            .module__wrapper:after {
+                content: "";
+                display: table;
+                width: 100%;
+                clear: both;
+                }
+        .module__item {
+            box-sizing: border-box;
+            }
+            .module__content {
+                float: left;
+                width: 60%;
+                padding-right: 2em;
+                border-right: 2px solid #DDD;
+                }
+            .module__components {
+                float: right;
+                width: 38%;
+                }
     </style>
 </head>
 <body>
+    {{{testincl}}}
     <div class="wrapper">
         {{#templates}}
             <div class="module">
                 <h2 class="module__title">{{name}}</h2>
-                <div class="module__content">
-                    {{{content}}}
+                <div class="module__wrapper">
+                    <div class="module__item module__content">
+                        {{{content}}}
+                    </div>
+                    <div class="module__item module__components">
+                        {{{components}}}
+                    </div>
                 </div>
             </div>
         {{/templates}}

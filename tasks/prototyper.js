@@ -10,85 +10,111 @@
 
 var mustache = require("mustache"),
     path = require("path"),
-    open = require("open");
+    open = require("open"),
+    prototyper = require("./lib/prototyper.js");
 
 module.exports = function(grunt) {
 
     grunt.registerMultiTask('prototyper', 'Create elements from components', function() {
-        // Merge task-specific and/or target-specific options with these defaults.
+
         var cwd = this.data.cwd,
+            options = this.options(),
+            openResult = options.openResult,
             componentsFolder = this.data.componentsFolder,
-            templates = cwd + this.data.templatesFolder,
+            templatesFolder = cwd + this.data.templatesFolder,
+            includesFolder = cwd + this.data.includesFolder,
+            configFile = cwd + this.data.config,
+            config = {},
+            parsedTemplates = {},
+            parsedData = {},
+            parsedResults = {},
             elementsPath = cwd + componentsFolder + "elements/",
             blocksPath = cwd + componentsFolder + "blocks/",
             modulePath = cwd + componentsFolder + "modules/",
             resultFile = cwd + "index.html";
 
-        var folderPaths = [elementsPath, blocksPath, modulePath];
-
-        var templatesComponents = {};
-
-        folderPaths.forEach(function(folderPath) {
-            var folderName = path.basename(folderPath);
-            var subFolders = grunt.file.expand(folderPath + "*");
-            templatesComponents[folderName] = parseFolder(folderPath);
-        });
-
-        var finalModules = templatesComponents.modules;
         var finalData = {
             "templates": []
         };
+
+        if (grunt.file.exists(configFile)) {
+            config = grunt.file.readJSON(configFile);
+        }
+
+        var folderPaths = [elementsPath, blocksPath, modulePath];
+
+
+        // 1. PARSE FOLDERS FIRST
+        // ------------------------------------------
+        // fill parsedData and parsedTemplates
+
+        prototyper.parseFolders(folderPaths);
+
+        // 2. FILL PARSED RESULTS (only element at first)
+        // ------------------------------------------
+        // first fill of parsedResults
+
+        prototyper.fillTemplatesWithData(prototyper.parsedTemplates, prototyper.parsedData);
+
+        // 3. Parse all set from elements to modules
+        // ------------------------------------------
+        // get full module
+
+        var paramsBlocks = {
+            "templatesKey": "blocks",
+            "parsResultKey": "elements"
+        };
+        prototyper.fillTemplatesByKey(paramsBlocks);
+
+        var paramsModules = {
+            "templatesKey": "modules",
+            "parsResultKey": "blocks"
+        };
+        prototyper.fillTemplatesByKey(paramsModules);
+
+
+        // 4. Paint additional templates
+        // ------------------------------------------
+
+        for (var modifKey in config) {
+            var modifItem = config[modifKey];
+            prototyper.createModification(modifKey, modifItem);
+            prototyper.componentsLists[modifKey] = modifItem;
+        }
+
+        // 5. Paint result
+        // ------------------------------------------
+
+        var finalModules = prototyper.parsedResults.modules;
 
         if (finalModules) {
             for (var item in finalModules) {
                 finalData.templates.push({
                     "name": item,
-                    "content": finalModules[item]
+                    "content": finalModules[item],
+                    "components": prototyper.componentsLists[item]
                 });
             }
         }
 
-        var indexTemplate = grunt.file.read(templates + "index.html");
+        if (grunt.file.exists(includesFolder)) {
+            var includes = grunt.file.expand(includesFolder + "*");
+            includes.forEach(function(filePath) {
+                var includedContent = grunt.file.read(filePath);
+                var fileName = path.basename(filePath, path.extname(filePath));
+                finalData[fileName] = includedContent;
+            });
+        }
+
+        var indexTemplate = grunt.file.read(templatesFolder + "index.html");
 
         var result = mustache.render(indexTemplate, finalData);
 
         grunt.file.write(resultFile, result);
-        open(resultFile);
 
-
-        // FUNCTIONS
-        // ----------------------------------------------
-
-        function parseFolder(folderPath) {
-            var folderName = path.basename(folderPath);
-            var sources = grunt.file.expand(folderPath + "*");
-
-            var folderData = {};
-
-            sources.forEach(function(sourceFolderPath) {
-                var srcFolderName = path.basename(sourceFolderPath);
-
-                var itemTemplate = grunt.file.read(sourceFolderPath + "/template.html");
-                var jsonPath = sourceFolderPath + "/data.json";
-
-                var itemJson = {};
-
-                if (grunt.file.exists(jsonPath)) {
-                    itemJson = grunt.file.readJSON(jsonPath);
-                } else if (folderName === "blocks") {
-                    itemJson = templatesComponents["elements"];
-                } else if (folderName === "modules") {
-                    itemJson = templatesComponents["blocks"];
-                }
-
-                if (itemJson) {
-                    var output = mustache.render(itemTemplate, itemJson);
-                    folderData[srcFolderName] = output;
-                }
-
-            });
-
-            return folderData;
+        openResult = (openResult === undefined) ? true : openResult;
+        if (openResult) {
+            open(resultFile);
         }
 
     });
