@@ -25,13 +25,17 @@ In your project's Gruntfile, add a section named `prototyper` to the data object
 ```js
 grunt.initConfig({
   prototyper: {
-      default_options: {
-          options: {},
-          cwd: "test/",
-          componentsFolder: "components/",
-          templatesFolder: "templates/"
-      }
-  }
+            default_options: {
+                options: {
+                    openResult: false
+                },
+                cwd: "myfiles/",
+                componentsFolder: "components/",
+                templatesFolder: "templates/",
+                includesFolder: "includes/",
+                config: "config.json"
+            }
+        }
 });
 ```
 
