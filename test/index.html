@@ -5,51 +5,130 @@
     <title>Modules</title>
     <style>
         BODY {
+    background: #FFF;
+    }
+.wrapper {
+    min-width: 500px;
+    max-width: 1000px;
+    margin: 3em auto;
+    padding: 0 2em;
+    }
+/* DEMOTABS
+------------------------------- */
+.demotabs {
+    position: relative;
+    margin-bottom: 2em;
+    padding: 0;
+    }
+    .demotabs:after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-bottom: 1px solid #DDD;
+        }
+    .demotab {
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        padding: .5em 1em;
+        border: 1px solid transparent;
+        border-width: 1px 1px 0;
+        font: 1.2em/1 Trebuchet MS, sans-serif;
+        color: #777;
+        cursor: pointer;
+        }
+        .demotab--current {
             background: #FFF;
+            border-color: #DDD;
+            color: #000;
+            cursor: default;
             }
-        .wrapper {
-            min-width: 500px;
-            max-width: 1000px;
-            margin: 3em auto;
+/* DEMOITEMS
+------------------------------- */
+.demoitem {
+    display: none;
+    }
+.demoitem--current {
+    display: block;
+    }
+/* MODULES
+------------------------------- */
+.module {
+    margin-bottom: 2em;
+    }
+.module__title {
+    display: inline-block;
+    position: relative;
+    margin: 0 0 .5em;
+    padding: .2em .5em;
+    background: steelblue;
+    font: 1.3em/1 Trebuchet MS, sans-serif;
+    color: #FFF;
+    }
+    .module__title:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -.692em;
+        width: 0;
+        height: 0;
+        border: .72em solid transparent;
+        border-right-width: 0;
+        border-left-color: steelblue;
+        }
+    .demoitem--elements .module__title {
+        background: yellowgreen;
+        }
+        .demoitem--elements .module__title:after {
+            border-left-color: yellowgreen;
             }
-        .module {
-            margin-bottom: 2em;
-            }
-        .module__title {
-            margin: 0 0 .5em;
-            font: 2em/1 Trebuchet MS, sans-serif;
-            }
-        .module__wrapper {
-            }
-            .module__wrapper:after {
-                content: "";
-                display: table;
-                width: 100%;
-                clear: both;
-                }
-        .module__item {
-            box-sizing: border-box;
-            }
-            .module__content {
-                float: left;
-                width: 60%;
-                padding-right: 2em;
-                border-right: 2px solid #DDD;
-                }
-            .module__components {
-                float: right;
-                width: 38%;
-                }
+
+.module__wrapper {}
+
+    .module__wrapper:after {
+        content: "";
+        display: table;
+        width: 100%;
+        clear: both;
+        }
+.module__item {
+    box-sizing: border-box;
+    }
+    .demoitem--elements .module__item {
+        border: 1px solid #DDD;
+        padding: 1em;
+        }
+    .demoitem--templates .module__content {
+        float: left;
+        width: 60%;
+        padding-right: 2em;
+        border-right: 2px solid #DDD;
+        }
+    .demoitem--templates .module__components {
+        float: right;
+        width: 38%;
+        }
     </style>
 </head>
 <body>
-    <p>(Includes work)</p>
+    <!-- <p>(Includes work)</p> -->
     <div class="wrapper">
-            <div class="module">
-                <h2 class="module__title">entryunit</h2>
-                <div class="module__wrapper">
-                    <div class="module__item module__content">
-                        <div class="entry">
+
+        <ul class="demotabs">
+            <li class="demotab" data-show="demoitem--templates">Templates</li>
+            <li class="demotab" data-show="demoitem--elements">Elements</li>
+        </ul>
+
+        <div class="demoitems">
+            <div class="demoitem demoitem--templates">
+                    <div class="module">
+                        <h2 class="module__title">entryunit</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <div class="entry">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -62,17 +141,17 @@
 </div>
 </footer>
 </div>
+                            </div>
+                            <div class="module__item module__components">
+                                
+                            </div>
+                        </div>
                     </div>
-                    <div class="module__item module__components">
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="module">
-                <h2 class="module__title">entryunit--var1</h2>
-                <div class="module__wrapper">
-                    <div class="module__item module__content">
-                        <div class="entry">
+                    <div class="module">
+                        <h2 class="module__title">entryunit--var1</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <div class="entry">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"></span>
@@ -85,17 +164,17 @@
 </div>
 </footer>
 </div>
+                            </div>
+                            <div class="module__item module__components">
+                                <ul><li>user</li><li>title</li><li>comments</li></ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="module__item module__components">
-                        <ul><li>user</li><li>title</li><li>comments</li></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="module">
-                <h2 class="module__title">entryunit--var2</h2>
-                <div class="module__wrapper">
-                    <div class="module__item module__content">
-                        <div class="entry">
+                    <div class="module">
+                        <h2 class="module__title">entryunit--var2</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <div class="entry">
     <header>
     <span class="user"></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -106,17 +185,17 @@
     <div class="comments"></div>
 </footer>
 </div>
+                            </div>
+                            <div class="module__item module__components">
+                                <ul><li>date</li><li>entrytext</li></ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="module__item module__components">
-                        <ul><li>date</li><li>entrytext</li></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="module">
-                <h2 class="module__title">entryunit--var3</h2>
-                <div class="module__wrapper">
-                    <div class="module__item module__content">
-                        <div class="entry">
+                    <div class="module">
+                        <h2 class="module__title">entryunit--var3</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <div class="entry">
     <header>
     <span class="user"></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -127,12 +206,98 @@
     <div class="comments"></div>
 </footer>
 </div>
+                            </div>
+                            <div class="module__item module__components">
+                                <ul><li>title</li><li>date</li></ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="module__item module__components">
-                        <ul><li>title</li><li>date</li></ul>
-                    </div>
-                </div>
             </div>
+            <div class="demoitem demoitem--elements">
+                    <div class="module">
+                        <h2 class="module__title">comments</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                    <a href="http://ya.ru">Добавить комментарий</a>
+    <a href="http://ya.ru">156 комментариев</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module">
+                        <h2 class="module__title">date</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <span class="date">12.08.2014</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module">
+                        <h2 class="module__title">entrytext</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                Бесконечно малая величина, в том числе, стремительно транслирует действительный контрапункт контрастных фактур, что известно даже школьникам. Интеграл по бесконечной области, как следует из вышесказанного, монотонно изменяет шоу-бизнес. Неравенство Бернулли mezzo forte раскручивает разнокомпонентный громкостнoй прогрессийный период.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module">
+                        <h2 class="module__title">title</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <h3 class="title">Разнокомпонентный интеграл от функции комплексной переменной: методология и особенности</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module">
+                        <h2 class="module__title">user</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                <a href="http://ya.ru">user</a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+
     </div>
+
+    <script>(function(){
+    var doc = document;
+    var tabClass = "demotab";
+    var tabCurrent = tabClass + "--current";
+    var itemClass = "demoitem";
+    var itemCurrent = itemClass + "--current";
+
+    var tabs = doc.querySelectorAll("." + tabClass);
+    var Items = doc.querySelectorAll("." + itemClass);
+
+    var currentTabElem = tabs[0];
+    var currentItemElem = Items[0];
+
+    currentTabElem.classList.add(tabCurrent);
+    currentItemElem.classList.add(itemCurrent);
+
+    for (var i = 0; i < tabs.length; i++) {
+        var tab = tabs[i];
+        tab.onclick = function(event) {
+            var showElem = this.getAttribute("data-show");
+
+            currentTabElem.classList.remove(tabCurrent);
+            currentItemElem.classList.remove(itemCurrent);
+
+            this.classList.add(tabCurrent);
+            currentTabElem = this;
+
+            currentItemElem = doc.querySelector("." + showElem);
+            currentItemElem.classList.add(itemCurrent);;
+        };
+    }
+
+    function out(content) {
+        console.log(content);
+    }
+})();</script>
+    <script src="//localhost:1337/livereload.js"></script>
 </body>
 </html>

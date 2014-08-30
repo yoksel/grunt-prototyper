@@ -73,7 +73,7 @@ module.exports = function(grunt) {
         prototyper.fillTemplatesByKey(paramsModules);
 
 
-        // 4. Paint additional templates
+        // 4. Fill additional templates
         // ------------------------------------------
 
         for (var modifKey in config) {
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
             prototyper.componentsLists[modifKey] = modifItem;
         }
 
-        // 5. Paint result
+        // 5. Fill result
         // ------------------------------------------
 
         var finalModules = prototyper.parsedResults.modules;
@@ -93,6 +93,23 @@ module.exports = function(grunt) {
                     "name": item,
                     "content": finalModules[item],
                     "components": prototyper.componentsLists[item]
+                });
+            }
+        }
+
+        // 6. Fill Elements
+        // ------------------------------------------
+
+        var finalElements = prototyper.parsedResults.elements;
+
+        if (finalElements) {
+            if (!finalData.elems) {
+                finalData.elems = [];
+            }
+            for (var itemElem in finalElements) {
+                finalData.elems.push({
+                    "name": itemElem,
+                    "content": finalElements[itemElem]
                 });
             }
         }

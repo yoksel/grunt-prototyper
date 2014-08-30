@@ -1,0 +1,107 @@
+BODY {
+    background: #FFF;
+    }
+.wrapper {
+    min-width: 500px;
+    max-width: 1000px;
+    margin: 3em auto;
+    padding: 0 2em;
+    }
+/* DEMOTABS
+------------------------------- */
+.demotabs {
+    position: relative;
+    margin-bottom: 2em;
+    padding: 0;
+    }
+    .demotabs:after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-bottom: 1px solid #DDD;
+        }
+    .demotab {
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        padding: .5em 1em;
+        border: 1px solid transparent;
+        border-width: 1px 1px 0;
+        font: 1.2em/1 Trebuchet MS, sans-serif;
+        color: #777;
+        cursor: pointer;
+        }
+        .demotab--current {
+            background: #FFF;
+            border-color: #DDD;
+            color: #000;
+            cursor: default;
+            }
+/* DEMOITEMS
+------------------------------- */
+.demoitem {
+    display: none;
+    }
+.demoitem--current {
+    display: block;
+    }
+/* MODULES
+------------------------------- */
+.module {
+    margin-bottom: 2em;
+    }
+.module__title {
+    display: inline-block;
+    position: relative;
+    margin: 0 0 .5em;
+    padding: .2em .5em;
+    background: steelblue;
+    font: 1.3em/1 Trebuchet MS, sans-serif;
+    color: #FFF;
+    }
+    .module__title:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -.692em;
+        width: 0;
+        height: 0;
+        border: .72em solid transparent;
+        border-right-width: 0;
+        border-left-color: steelblue;
+        }
+    .demoitem--elements .module__title {
+        background: yellowgreen;
+        }
+        .demoitem--elements .module__title:after {
+            border-left-color: yellowgreen;
+            }
+
+.module__wrapper {}
+
+    .module__wrapper:after {
+        content: "";
+        display: table;
+        width: 100%;
+        clear: both;
+        }
+.module__item {
+    box-sizing: border-box;
+    }
+    .demoitem--elements .module__item {
+        border: 1px solid #DDD;
+        padding: 1em;
+        }
+    .demoitem--templates .module__content {
+        float: left;
+        width: 60%;
+        padding-right: 2em;
+        border-right: 2px solid #DDD;
+        }
+    .demoitem--templates .module__components {
+        float: right;
+        width: 38%;
+        }

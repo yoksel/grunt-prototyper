@@ -4,60 +4,52 @@
     <meta charset="UTF-8">
     <title>Modules</title>
     <style>
-        BODY {
-            background: #FFF;
-            }
-        .wrapper {
-            min-width: 500px;
-            max-width: 1000px;
-            margin: 3em auto;
-            }
-        .module {
-            margin-bottom: 2em;
-            }
-        .module__title {
-            margin: 0 0 .5em;
-            font: 2em/1 Trebuchet MS, sans-serif;
-            }
-        .module__wrapper {
-            }
-            .module__wrapper:after {
-                content: "";
-                display: table;
-                width: 100%;
-                clear: both;
-                }
-        .module__item {
-            box-sizing: border-box;
-            }
-            .module__content {
-                float: left;
-                width: 60%;
-                padding-right: 2em;
-                border-right: 2px solid #DDD;
-                }
-            .module__components {
-                float: right;
-                width: 38%;
-                }
+        {{{styles}}}
     </style>
 </head>
 <body>
     {{{testincl}}}
     <div class="wrapper">
-        {{#templates}}
-            <div class="module">
-                <h2 class="module__title">{{name}}</h2>
-                <div class="module__wrapper">
-                    <div class="module__item module__content">
-                        {{{content}}}
+
+        <ul class="demotabs">
+            <li class="demotab" data-show="demoitem--templates">Templates</li>
+            <li class="demotab" data-show="demoitem--elements">Elements</li>
+        </ul>
+
+        <div class="demoitems">
+            <div class="demoitem demoitem--templates">
+                {{#templates}}
+                    <div class="module">
+                        <h2 class="module__title">{{name}}</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                {{{content}}}
+                            </div>
+                            <div class="module__item module__components">
+                                {{{components}}}
+                            </div>
+                        </div>
                     </div>
-                    <div class="module__item module__components">
-                        {{{components}}}
-                    </div>
-                </div>
+                {{/templates}}
             </div>
-        {{/templates}}
+            <div class="demoitem demoitem--elements">
+                {{#elems}}
+                    <div class="module">
+                        <h2 class="module__title">{{name}}</h2>
+                        <div class="module__wrapper">
+                            <div class="module__item module__content">
+                                {{{content}}}
+                            </div>
+                        </div>
+                    </div>
+                {{/elems}}
+            </div>
+        </div>
+
+
     </div>
+
+    <script>{{{script}}}</script>
+    <script src="//localhost:1337/livereload.js"></script>
 </body>
 </html>

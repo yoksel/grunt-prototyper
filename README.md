@@ -39,4 +39,7 @@ grunt.initConfig({
 });
 ```
 
+## Release History
+
+0.0.4 - Add components to the demo page
 

@@ -10,12 +10,15 @@
 
 module.exports = function(grunt) {
 
+    require('load-grunt-tasks')(grunt);
+
     // Project configuration.
     grunt.initConfig({
         jshint: {
             all: [
                 'Gruntfile.js',
-                'tasks/*.js'
+                'tasks/*.js',
+                "test/**.*js"
             ],
             options: {
                 jshintrc: '.jshintrc'
@@ -27,10 +30,18 @@ module.exports = function(grunt) {
         },
 
         prototyper: {
-            default_options: {
+            dev: {
                 options: {
-                    // openResult: false
+                    openResult: false
                 },
+                cwd: "test/",
+                componentsFolder: "components/",
+                templatesFolder: "templates/",
+                includesFolder: "includes/",
+                config: "config.json"
+            },
+            test: {
+                options: {},
                 cwd: "test/",
                 componentsFolder: "components/",
                 templatesFolder: "templates/",
@@ -39,15 +50,41 @@ module.exports = function(grunt) {
             }
         },
 
+        watch: {
+            all: {
+                files: [
+                    'test/**/*',
+                    '!test/index.html',
+                ],
+                tasks: ['prototyper:dev', 'jshint'],
+                options: {
+                    reload: true,
+                    livereload: 1337, //true,
+                },
+            }
+        },
+
+        connect: {
+            server: {
+                options: {
+                    port: 9002,
+                    open: {
+                        target: 'http://localhost:9002/test/'
+                    }
+                }
+            }
+        }
+
     });
 
     // Actually load this plugin's task(s).
     grunt.loadTasks('tasks');
 
-    // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.registerTask('default', ['prototyper:test', 'jshint']);
 
-    grunt.registerTask('default', ['prototyper', 'jshint']);
+    grunt.registerTask('dev', [
+        'connect:server:open',
+        'watch'
+    ]);
 
 };
