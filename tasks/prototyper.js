@@ -111,74 +111,8 @@ module.exports = function(grunt) {
             }
         }
 
-        // if (grunt.file.exists(includesFolder)) {
-        //     var includes = grunt.file.expand(includesFolder + "*");
-        //     includes.forEach(function(filePath) {
-        //         var includedContent = grunt.file.read(filePath);
-        //         var fileName = path.basename(filePath, path.extname(filePath));
-        //         prototyper.finalData[fileName] = includedContent;
-        //     });
-        // }
-
-        prototyper.addIncludes = function(folderPath) {
-
-            if (grunt.file.exists(folderPath)) {
-                var includes = grunt.file.expand(folderPath + "*");
-
-                includes.forEach(function(itemPath) {
-                    var itemName = path.basename(itemPath, path.extname(itemPath));
-
-                    if (grunt.file.isFile(itemPath)) {
-
-                        var includedContent = grunt.file.read(itemPath);
-                        prototyper.finalData[itemName] = includedContent;
-                    } else {
-                        prototyper.customIncludes(itemPath);
-
-                    }
-
-                });
-            }
-        };
-
-        prototyper.customIncludes = function(itemPath) {
-            var itemName = path.basename(itemPath, path.extname(itemPath));
-            var innerIncludes = grunt.file.expand(itemPath + "**/*");
-            var tagsByExts = {
-                ".js": "script",
-                ".css": "style"
-            };
-
-            innerIncludes.forEach(function(filePath) {
-
-                var fileName = path.basename(itemPath, path.extname(itemPath));
-                var fileExt = path.extname(filePath);
-                var tag = tagsByExts[fileExt];
-                var includedContent = grunt.file.read(filePath);
-
-                if (!prototyper.finalData[itemName]) {
-                    prototyper.finalData[itemName] = [];
-                }
-
-                var fileObj = {
-                    "content": includedContent
-                };
-
-                if (tag) {
-                    fileObj.opentag = "<" + tag + ">";
-                    fileObj.closetag = "</" + tag + ">";
-                }
-
-                prototyper.finalData[itemName].push(fileObj);
-            });
-        };
-
-
-
         prototyper.addIncludes(defIncludesFolder);
         prototyper.addIncludes(includesFolder);
-
-
 
         var indexTempltPath = defTemplatesFolder + "index.html";
         var customIndexTempltPath = templatesFolder + "index.html";

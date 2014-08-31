@@ -29,7 +29,7 @@ prototyper.parseFolders = function(folderPaths) {
 /**
  * Get folder by path, parse it and fill objects by data and templates
  * Fill parsedTemplates and parsedData
- 
+
  */
 prototyper.parseFolder = function(folderPath) {
     var parsedTemplates = this.parsedTemplates;
@@ -104,7 +104,8 @@ prototyper.fillTemplatesByKey = function(params) {
         parsResultKey = params.parsResultKey,
         myParsedResults = params.myParsedResults,
         modifKey = params.modifKey,
-        modifList = params.modifList;
+        modifList = params.modifList,
+        wrapperClass = params.wrapperClass;
 
     var resultsObj = myParsedResults ? myParsedResults : prototyper.parsedResults;
     var blocksTemplates = prototyper.parsedTemplates[templatesKey];
@@ -123,6 +124,9 @@ prototyper.fillTemplatesByKey = function(params) {
                 templateKey = templateKey + "--" + modifKey;
                 prototyper.componentsLists[templateKey] = modfListToList(modifList);
             }
+            if (wrapperClass) {
+                renderedContent = "<div class=" + wrapperClass + ">" + renderedContent + "</div>";
+            }
             prototyper.parsedResults[templatesKey][templateKey] = renderedContent;
         }
     }
@@ -130,6 +134,11 @@ prototyper.fillTemplatesByKey = function(params) {
 
 function modfListToList(modifList) {
     var output = "";
+
+    if (!Array.isArray(modifList)) {
+        return;
+    }
+
     modifList.forEach(function(item) {
         output += "<li>" + item + "</li>";
     });
@@ -138,6 +147,10 @@ function modfListToList(modifList) {
 
 prototyper.remapObject = function(oldElements, modifList) {
     var newElements = {};
+
+    if (!Array.isArray(modifList)) {
+        return;
+    }
 
     modifList.forEach(function(modifKey) {
         newElements[modifKey] = oldElements[modifKey];
@@ -149,6 +162,12 @@ prototyper.remapObject = function(oldElements, modifList) {
 prototyper.createModification = function(modifKey, modifList) {
 
     var oldElements = prototyper.parsedResults["elements"];
+    var wrapperClass = "";
+
+    if (!Array.isArray(modifList)) {
+        wrapperClass = modifList["wrapper-class"];
+        modifList = modifList["elements"];
+    }
     var newElements = prototyper.remapObject(oldElements, modifList);
 
     var paramsBlocks2 = {
@@ -164,9 +183,62 @@ prototyper.createModification = function(modifKey, modifList) {
         "templatesKey": "modules",
         "parsResultKey": "blocks",
         "modifKey": modifKey,
-        "modifList": modifList
+        "modifList": modifList,
+        "wrapperClass": wrapperClass
     };
     prototyper.fillTemplatesByKey(paramsModules2);
 };
 
+prototyper.addIncludes = function(folderPath) {
+
+    if (grunt.file.exists(folderPath)) {
+        var includes = grunt.file.expand(folderPath + "*");
+
+        includes.forEach(function(itemPath) {
+            var itemName = path.basename(itemPath, path.extname(itemPath));
+
+            if (grunt.file.isFile(itemPath)) {
+
+                var includedContent = grunt.file.read(itemPath);
+                prototyper.finalData[itemName] = includedContent;
+            } else {
+                prototyper.customIncludes(itemPath);
+
+            }
+
+        });
+    }
+};
+
+prototyper.customIncludes = function(itemPath) {
+    var itemName = path.basename(itemPath, path.extname(itemPath));
+    var innerIncludes = grunt.file.expand(itemPath + "**/*");
+    var tagsByExts = {
+        ".js": "script",
+        ".css": "style"
+    };
+
+    innerIncludes.forEach(function(filePath) {
+
+        var fileName = path.basename(itemPath, path.extname(itemPath));
+        var fileExt = path.extname(filePath);
+        var tag = tagsByExts[fileExt];
+        var includedContent = grunt.file.read(filePath);
+
+        if (!prototyper.finalData[itemName]) {
+            prototyper.finalData[itemName] = [];
+        }
+
+        var fileObj = {
+            "content": includedContent
+        };
+
+        if (tag) {
+            fileObj.opentag = "<" + tag + ">";
+            fileObj.closetag = "</" + tag + ">";
+        }
+
+        prototyper.finalData[itemName].push(fileObj);
+    });
+};
 module.exports = prototyper;
