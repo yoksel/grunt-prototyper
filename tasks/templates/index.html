@@ -33,11 +33,14 @@
         <div class="demoitems">
             <div class="demoitem demoitem--templates">
                 {{#templates}}
+                    <!-- Module: {{name}} -->
                     <div class="module">
                         <h2 class="module__title">{{name}}</h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
+                                <!-- {{name}} -->
                                 {{{content}}}
+                                <!-- //{{name}} -->
                             </div>
                             <div class="module__item module__components">
                                 {{{components}}}
