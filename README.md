@@ -39,7 +39,11 @@ grunt.initConfig({
 });
 ```
 
+To see how it works run `grunt` in package folder and/or look into folder `test/`.
+
 ## Release History
+
+0.0.5 - Add embeded template for demo output.
 
 0.0.4 - Add components to the demo page
 

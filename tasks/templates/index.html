@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Modules</title>
+     <!-- Included styles -->
     <style>
         {{{styles}}}
     </style>
+    <!-- Custom content -->
+    {{#include-to-head}}
+        {{{opentag}}}
+        {{{content}}}
+        {{{closetag}}}
+    {{/include-to-head}}
+    <!-- //Custom content -->
 </head>
 <body>
-    {{{testincl}}}
+    <!-- Custom content -->
+    {{#include-to-bodybegin}}
+        {{{opentag}}}
+        {{{content}}}
+        {{{closetag}}}
+    {{/include-to-bodybegin}}
+    <!-- //Custom content -->
     <div class="wrapper">
 
         <ul class="demotabs">
@@ -49,7 +63,15 @@
 
     </div>
 
+    <!-- Included script -->
     <script>{{{script}}}</script>
+    <!-- Custom content -->
+    {{#include-to-bodyend}}
+        {{{opentag}}}
+        {{{content}}}
+        {{{closetag}}}
+    {{/include-to-bodyend}}
+    <!-- //Custom content -->
     <script src="//localhost:1337/livereload.js"></script>
 </body>
 </html>

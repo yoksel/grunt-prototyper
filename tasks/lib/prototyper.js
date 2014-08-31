@@ -12,6 +12,9 @@ prototyper.parsedTemplates = {};
 prototyper.parsedData = {};
 prototyper.parsedResults = {};
 prototyper.componentsLists = {};
+prototyper.finalData = {
+    "templates": []
+};
 
 
 prototyper.parseFolders = function(folderPaths) {
