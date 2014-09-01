@@ -43,6 +43,8 @@ To see how it works run `grunt` in package folder and/or look into folder `test/
 
 ## Release History
 
+0.0.8 - Fix adding custom classes
+
 0.0.7 - Add ability to add custom class to main template element (using {{{aditional-classes}}}).
 
 0.0.6 - Add ability to add wrapper with custom class for element.

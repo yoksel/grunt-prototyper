@@ -93,6 +93,35 @@ prototyper.fillTemplatesWithData = function(templatesSet, dataSet) {
 };
 
 /**
+ * Copy object
+ */
+
+function copyObj(obj){
+    var newObj = {};
+    for(var key in obj){
+        newObj[key] = obj[key];
+    }
+    return newObj;
+}
+
+/**
+ * Present modifList as HTML-list
+ */
+
+function modfListToList(modifList) {
+    var output = "";
+
+    if (!Array.isArray(modifList)) {
+        return;
+    }
+
+    modifList.forEach(function(item) {
+        output += "<li>" + item + "</li>";
+    });
+    return "<ul>" + output + "</ul>";
+}
+
+/**
  * Fill parsedResult for particular folder
  * and place it to parsedResult
  * @params params.templatesKey
@@ -113,7 +142,7 @@ prototyper.fillTemplatesByKey = function(params) {
     for (var templateKey in blocksTemplates) {
 
         var template = blocksTemplates[templateKey];
-        var data = resultsObj[parsResultKey];
+        var data = copyObj(resultsObj[parsResultKey]);
 
         if(modifKey && prototyper.customClasses[modifKey]){
             data["aditional-classes"] = prototyper.customClasses[modifKey];
@@ -137,18 +166,9 @@ prototyper.fillTemplatesByKey = function(params) {
     }
 };
 
-function modfListToList(modifList) {
-    var output = "";
-
-    if (!Array.isArray(modifList)) {
-        return;
-    }
-
-    modifList.forEach(function(item) {
-        output += "<li>" + item + "</li>";
-    });
-    return "<ul>" + output + "</ul>";
-}
+/**
+ * Replace ol props by new props
+ */
 
 prototyper.remapObject = function(oldElements, modifList) {
     var newElements = {};
@@ -163,6 +183,10 @@ prototyper.remapObject = function(oldElements, modifList) {
 
     return newElements;
 };
+
+/**
+ * Create modification by lists from config
+ */
 
 prototyper.createModification = function(modifKey, modifList) {
 
@@ -195,6 +219,10 @@ prototyper.createModification = function(modifKey, modifList) {
     prototyper.fillTemplatesByKey(paramsModules2);
 };
 
+/**
+ * Add includes to list of includes
+ */
+
 prototyper.addIncludes = function(folderPath) {
 
     if (grunt.file.exists(folderPath)) {
@@ -215,6 +243,10 @@ prototyper.addIncludes = function(folderPath) {
         });
     }
 };
+
+/**
+ * Process custom includes
+ */
 
 prototyper.customIncludes = function(itemPath) {
     var itemName = path.basename(itemPath, path.extname(itemPath));

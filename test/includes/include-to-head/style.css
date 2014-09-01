@@ -1,1 +1,7 @@
 BODY {}
+
+.class1 {
+    padding: 1em;
+    background: lightcyan;
+    border-radius: 5px;
+    }
