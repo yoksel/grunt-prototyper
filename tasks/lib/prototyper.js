@@ -12,6 +12,7 @@ prototyper.parsedTemplates = {};
 prototyper.parsedData = {};
 prototyper.parsedResults = {};
 prototyper.componentsLists = {};
+prototyper.customClasses = {};
 prototyper.finalData = {
     "templates": []
 };
@@ -29,7 +30,6 @@ prototyper.parseFolders = function(folderPaths) {
 /**
  * Get folder by path, parse it and fill objects by data and templates
  * Fill parsedTemplates and parsedData
-
  */
 prototyper.parseFolder = function(folderPath) {
     var parsedTemplates = this.parsedTemplates;
@@ -114,6 +114,11 @@ prototyper.fillTemplatesByKey = function(params) {
 
         var template = blocksTemplates[templateKey];
         var data = resultsObj[parsResultKey];
+
+        if(modifKey && prototyper.customClasses[modifKey]){
+            data["aditional-classes"] = prototyper.customClasses[modifKey];
+        }
+
         var renderedContent = mustache.render(template, data);
 
         if (renderedContent) {
@@ -166,6 +171,7 @@ prototyper.createModification = function(modifKey, modifList) {
 
     if (!Array.isArray(modifList)) {
         wrapperClass = modifList["wrapper-class"];
+        prototyper.customClasses[modifKey] = modifList["aditional-classes"];
         modifList = modifList["elements"];
     }
     var newElements = prototyper.remapObject(oldElements, modifList);

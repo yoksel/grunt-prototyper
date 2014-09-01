@@ -1,7 +1,11 @@
 {
     "var1": ["user", "title", "comments"],
-    "custom-class": {
+    "wrapper-class": {
         "wrapper-class": "myclass",
+        "elements": ["user", "title", "comments"]
+    },
+    "custom-class": {
+        "aditional-classes": "class1 class2",
         "elements": ["user", "title", "comments"]
     },
     "var2": ["date", "entrytext"],
