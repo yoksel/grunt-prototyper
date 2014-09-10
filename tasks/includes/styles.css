@@ -2,7 +2,7 @@ BODY {
     background: #FFF;
     }
 .wrapper {
-    min-width: 500px;
+    min-width: 350px;
     max-width: 1000px;
     margin: 3em auto;
     padding: 0 2em;
@@ -55,23 +55,30 @@ BODY {
 .module__title {
     display: inline-block;
     position: relative;
-    margin: 0 0 .5em;
-    padding: .2em .5em;
-    background: steelblue;
-    font: 1.3em/1 Trebuchet MS, sans-serif;
+    height: 1.42em;
+    margin: 0 0 1em;
+    overflow: hidden;
+    font: 1.3em/1.42 Trebuchet MS, sans-serif;
     color: #FFF;
     }
+    .module__title-inner {
+        display: inline-block;
+        height: 1.42em;
+        padding: 0 .5em ;
+        background: steelblue;
+        }
     .module__title:after {
         content: "";
-        display: block;
-        position: absolute;
+        display: inline-block;
+        position: relative;
         top: 0;
-        right: -.692em;
+        right: 0;
         width: 0;
         height: 0;
-        border: .72em solid transparent;
+        border: .73em solid transparent;
         border-right-width: 0;
         border-left-color: steelblue;
+        vertical-align: top;
         }
     .demoitem--elements .module__title {
         background: yellowgreen;
@@ -88,6 +95,7 @@ BODY {
         width: 100%;
         clear: both;
         }
+
 .module__item {
     box-sizing: border-box;
     }
@@ -95,13 +103,25 @@ BODY {
         border: 1px solid #DDD;
         padding: 1em;
         }
-    .demoitem--templates .module__content {
-        float: left;
-        width: 60%;
-        padding-right: 2em;
-        border-right: 2px solid #DDD;
+    .demoitem--elements .module__content:after {
+        content: "";
+        display: table;
+        width: 100%;
+        clear: both;
         }
+
+     .demoitem--templates .module__content {
+        float: left;
+        width: 100%;
+        }
+        .demoitem--templates .module__content-inner {
+            margin-right: 160px;
+            padding-right: 2em;
+            border-right: 2px solid #DDD;
+            }
     .demoitem--templates .module__components {
         float: right;
-        width: 38%;
+        width: 160px;
+        margin-left: -160px;
         }
+

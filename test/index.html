@@ -9,7 +9,7 @@
     background: #FFF;
     }
 .wrapper {
-    min-width: 500px;
+    min-width: 350px;
     max-width: 1000px;
     margin: 3em auto;
     padding: 0 2em;
@@ -62,23 +62,30 @@
 .module__title {
     display: inline-block;
     position: relative;
-    margin: 0 0 .5em;
-    padding: .2em .5em;
-    background: steelblue;
-    font: 1.3em/1 Trebuchet MS, sans-serif;
+    height: 1.42em;
+    margin: 0 0 1em;
+    overflow: hidden;
+    font: 1.3em/1.42 Trebuchet MS, sans-serif;
     color: #FFF;
     }
+    .module__title-inner {
+        display: inline-block;
+        height: 1.42em;
+        padding: 0 .5em ;
+        background: steelblue;
+        }
     .module__title:after {
         content: "";
-        display: block;
-        position: absolute;
+        display: inline-block;
+        position: relative;
         top: 0;
-        right: -.692em;
+        right: 0;
         width: 0;
         height: 0;
-        border: .72em solid transparent;
+        border: .73em solid transparent;
         border-right-width: 0;
         border-left-color: steelblue;
+        vertical-align: top;
         }
     .demoitem--elements .module__title {
         background: yellowgreen;
@@ -95,6 +102,7 @@
         width: 100%;
         clear: both;
         }
+
 .module__item {
     box-sizing: border-box;
     }
@@ -102,16 +110,29 @@
         border: 1px solid #DDD;
         padding: 1em;
         }
-    .demoitem--templates .module__content {
-        float: left;
-        width: 60%;
-        padding-right: 2em;
-        border-right: 2px solid #DDD;
+    .demoitem--elements .module__content:after {
+        content: "";
+        display: table;
+        width: 100%;
+        clear: both;
         }
+
+     .demoitem--templates .module__content {
+        float: left;
+        width: 100%;
+        }
+        .demoitem--templates .module__content-inner {
+            margin-right: 160px;
+            padding-right: 2em;
+            border-right: 2px solid #DDD;
+            }
     .demoitem--templates .module__components {
         float: right;
-        width: 38%;
+        width: 160px;
+        margin-left: -160px;
         }
+
+
     </style>
     <!-- Custom content -->
         <style>
@@ -142,11 +163,12 @@
             <div class="demoitem demoitem--templates">
                     <!-- Module: entry -->
                     <div class="module">
-                        <h2 class="module__title">entry</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry -->
-                                <div class="entry ">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry -->
+                                    <div class="entry ">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -159,7 +181,8 @@
 </div>
 </footer>
 </div>
-                                <!-- //entry -->
+                                    <!-- //entry -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 
@@ -168,11 +191,12 @@
                     </div>
                     <!-- Module: entry--var1 -->
                     <div class="module">
-                        <h2 class="module__title">entry--var1</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry--var1</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry--var1 -->
-                                <div class="entry ">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry--var1 -->
+                                    <div class="entry ">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"></span>
@@ -185,7 +209,8 @@
 </div>
 </footer>
 </div>
-                                <!-- //entry--var1 -->
+                                    <!-- //entry--var1 -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 <ul><li>user</li><li>title</li><li>comments</li></ul>
@@ -194,11 +219,12 @@
                     </div>
                     <!-- Module: entry--wrapper-class -->
                     <div class="module">
-                        <h2 class="module__title">entry--wrapper-class</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry--wrapper-class</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry--wrapper-class -->
-                                <div class=myclass><div class="entry ">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry--wrapper-class -->
+                                    <div class=myclass><div class="entry ">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"></span>
@@ -211,7 +237,8 @@
 </div>
 </footer>
 </div></div>
-                                <!-- //entry--wrapper-class -->
+                                    <!-- //entry--wrapper-class -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 <ul><li>user</li><li>title</li><li>comments</li></ul>
@@ -220,11 +247,12 @@
                     </div>
                     <!-- Module: entry--custom-class -->
                     <div class="module">
-                        <h2 class="module__title">entry--custom-class</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry--custom-class</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry--custom-class -->
-                                <div class="entry class1 class2">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry--custom-class -->
+                                    <div class="entry class1 class2">
     <header>
     <span class="user"><a href="http://ya.ru">user</a></span>
     <span class="date"></span>
@@ -237,7 +265,8 @@
 </div>
 </footer>
 </div>
-                                <!-- //entry--custom-class -->
+                                    <!-- //entry--custom-class -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 <ul><li>user</li><li>title</li><li>comments</li></ul>
@@ -246,11 +275,12 @@
                     </div>
                     <!-- Module: entry--var2 -->
                     <div class="module">
-                        <h2 class="module__title">entry--var2</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry--var2</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry--var2 -->
-                                <div class="entry ">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry--var2 -->
+                                    <div class="entry ">
     <header>
     <span class="user"></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -261,7 +291,8 @@
     <div class="comments"></div>
 </footer>
 </div>
-                                <!-- //entry--var2 -->
+                                    <!-- //entry--var2 -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 <ul><li>date</li><li>entrytext</li></ul>
@@ -270,11 +301,12 @@
                     </div>
                     <!-- Module: entry--var3 -->
                     <div class="module">
-                        <h2 class="module__title">entry--var3</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entry--var3</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- entry--var3 -->
-                                <div class="entry ">
+                                <div class="module__item module__content-inner">
+                                    <!-- entry--var3 -->
+                                    <div class="entry ">
     <header>
     <span class="user"></span>
     <span class="date"><span class="date">12.08.2014</span></span>
@@ -285,7 +317,8 @@
     <div class="comments"></div>
 </footer>
 </div>
-                                <!-- //entry--var3 -->
+                                    <!-- //entry--var3 -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 <ul><li>title</li><li>date</li></ul>
@@ -295,7 +328,7 @@
             </div>
             <div class="demoitem demoitem--elements">
                     <div class="module">
-                        <h2 class="module__title">comments</h2>
+                        <h2 class="module__title"><span class="module__title-inner">comments</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                     <a href="http://ya.ru">Добавить комментарий</a>
@@ -305,7 +338,7 @@
                         </div>
                     </div>
                     <div class="module">
-                        <h2 class="module__title">date</h2>
+                        <h2 class="module__title"><span class="module__title-inner">date</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                 <span class="date">12.08.2014</span>
@@ -313,7 +346,7 @@
                         </div>
                     </div>
                     <div class="module">
-                        <h2 class="module__title">entrytext</h2>
+                        <h2 class="module__title"><span class="module__title-inner">entrytext</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                 Бесконечно малая величина, в том числе, стремительно транслирует действительный контрапункт контрастных фактур, что известно даже школьникам. Интеграл по бесконечной области, как следует из вышесказанного, монотонно изменяет шоу-бизнес. Неравенство Бернулли mezzo forte раскручивает разнокомпонентный громкостнoй прогрессийный период.
@@ -321,7 +354,7 @@
                         </div>
                     </div>
                     <div class="module">
-                        <h2 class="module__title">title</h2>
+                        <h2 class="module__title"><span class="module__title-inner">title</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                 <h3 class="title">Разнокомпонентный интеграл от функции комплексной переменной: методология и особенности</h3>
@@ -329,7 +362,7 @@
                         </div>
                     </div>
                     <div class="module">
-                        <h2 class="module__title">user</h2>
+                        <h2 class="module__title"><span class="module__title-inner">user</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                 <a href="http://ya.ru">user</a>

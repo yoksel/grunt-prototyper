@@ -35,12 +35,14 @@
                 {{#templates}}
                     <!-- Module: {{name}} -->
                     <div class="module">
-                        <h2 class="module__title">{{name}}</h2>
+                        <h2 class="module__title"><span class="module__title-inner">{{name}}</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
-                                <!-- {{name}} -->
-                                {{{content}}}
-                                <!-- //{{name}} -->
+                                <div class="module__item module__content-inner">
+                                    <!-- {{name}} -->
+                                    {{{content}}}
+                                    <!-- //{{name}} -->
+                                </div>
                             </div>
                             <div class="module__item module__components">
                                 {{{components}}}
@@ -52,7 +54,7 @@
             <div class="demoitem demoitem--elements">
                 {{#elems}}
                     <div class="module">
-                        <h2 class="module__title">{{name}}</h2>
+                        <h2 class="module__title"><span class="module__title-inner">{{name}}</span></h2>
                         <div class="module__wrapper">
                             <div class="module__item module__content">
                                 {{{content}}}
