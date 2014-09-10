@@ -74,6 +74,9 @@ UL {
         padding: 0 .5em ;
         background: steelblue;
         }
+        .demoitem--elements .module__title-inner {
+            background: yellowgreen;
+            }
     .module__title:after {
         content: "";
         display: inline-block;
@@ -86,9 +89,6 @@ UL {
         border-right-width: 0;
         border-left-color: steelblue;
         vertical-align: top;
-        }
-    .demoitem--elements .module__title {
-        background: yellowgreen;
         }
         .demoitem--elements .module__title:after {
             border-left-color: yellowgreen;
